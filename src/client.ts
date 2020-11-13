@@ -1,4 +1,4 @@
-import { Client, Collection, User } from "discord.js"
+import { Client, Collection, Guild, User } from "discord.js"
 import { commandI } from "./utils/command";
 import { statSync, readdirSync } from "fs";
 import * as path from "path"
@@ -14,20 +14,31 @@ export default class Knor extends Client{
     iL: string;
     db: typeof database = database;
     bannedUsers: Collection<User["id"], string> = new Collection();
+    prefixes: Collection<Guild["id"], string> = new Collection();
 
     constructor(options = {}){
         super(options)
         this.initializeEvents(path.resolve(__dirname, "events"));
         this.initializeCommands(path.resolve(__dirname, "commands"));
         this.getAllBannedUsers();
+        this.getAllPrefixes();
     }
 
     async getAllBannedUsers(){
         let users = await this.db.User.find()
+        
         users.forEach(user => {
             if(user.banbot){
                 this.bannedUsers.set(user._id, user.banbot.reason);
             }
+        })
+    }
+
+    async getAllPrefixes(){
+        let guilds = await this.db.Guild.find();
+
+        guilds.filter(guild => guild.prefix).forEach((guild) => {
+            this.prefixes.set(guild._id, guild.prefix);
         })
     }
 
@@ -65,5 +76,4 @@ export default class Knor extends Client{
             }
         })
     }
-
 }

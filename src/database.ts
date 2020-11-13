@@ -1,11 +1,11 @@
-import "dotenv/config"
+import "dotenv/config";
 import { Schema, model, Document, connect } from "mongoose";
-connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 export interface userItemsI{
     id: number,
     amount: number
-}
+};
 
 export interface userI extends Document{
     _id: string,
@@ -17,9 +17,14 @@ export interface userI extends Document{
         isBanned: boolean,
         reason: string
     }
-}
+};
 
-export let UserSchema = new Schema({
+export interface guildI extends Document{
+    _id: string,
+    prefix?: string
+};
+
+let UserSchema = new Schema({
     _id: String,
     bank: Number,
     lastDaily: Number,
@@ -40,6 +45,14 @@ export let UserSchema = new Schema({
     }
 }, {
     _id: false
-})
+});
 
-export let User = model<userI>("User", UserSchema)
+let GuildSchema = new Schema({
+    _id: String,
+    prefix: String
+}, {
+    _id: false
+});
+
+export let Guild = model<guildI>("Guild", GuildSchema);
+export let User = model<userI>("User", UserSchema);

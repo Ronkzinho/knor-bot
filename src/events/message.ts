@@ -2,10 +2,13 @@ import { Message } from "discord.js"
 import Knor from "../client"
 
 export default async function(this: Knor, message: Message){
+
+    let prefix = this.prefixes.has(message.guild.id) ? this.prefixes.get(message.guild.id) : this.prefix
+
     if(message.author.bot) return
-    if(message.content.startsWith(`<@${this.user.id}>`) || message.content.startsWith(`<@!${this.user.id}`)) return message.channel.send("Olá mundo!")
-    if(!message.content.startsWith(this.prefix)) return
-    var args = message.content.slice(this.prefix.length).split(/ +/g)
+    if(message.content.startsWith(`<@${this.user.id}>`) || message.content.startsWith(`<@!${this.user.id}`)) return message.channel.send(`Olá tudo bem? Meu prefixo é: \`${prefix}\``);
+    if(!message.content.startsWith(prefix)) return
+    var args = message.content.slice(prefix.length).split(/ +/g)
     var command = args.shift().toLowerCase()
     if(!command || command === "") return;
     if(this.bannedUsers.get(message.author.id)){

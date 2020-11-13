@@ -40,6 +40,11 @@ app.get("/info", (req, res) => {
     return res.json({ iL: client.iL, ghRep: client.ghRep });
 })
 
+app.get("/inventory", (req, res) => {
+    let authorization = req.headers["authorization"];
+    return res.json()
+})
+
 app.listen(process.env.PORT || 3333, () => {
     console.log(`Server startado(na porta ${process.env.PORT || 3333})!`)
 })
